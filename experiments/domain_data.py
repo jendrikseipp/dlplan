@@ -1,6 +1,7 @@
 import dlplan
 import tarski
 from tarski.io import PDDLReader
+from dlplan_utils import construct_vocabulary_info, construct_syntactic_element_factory
 
 
 class DomainData:
