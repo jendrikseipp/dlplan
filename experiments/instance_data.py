@@ -1,12 +1,5 @@
 from os import stat
-<<<<<<< HEAD
-<<<<<<< HEAD
 import dlplan
-=======
->>>>>>> added state space exploration via tarski to experiments
-=======
-import dlplan
->>>>>>> single instance experiment working
 import tarski
 from tarski.io import PDDLReader
 from tarski.grounding import LPGroundingStrategy
