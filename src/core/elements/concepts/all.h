@@ -21,22 +21,13 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role->evaluate(state);
-        const auto& r_data = r.get_const_data();
-        const auto c = m_concept->evaluate(state);
-        const auto& c_data = c.get_const_data();
-        ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        auto& result_data = result.get_data();
-        // find counterexamples b : exists b . (a,b) in R and b notin C
-        int num_objects = state.get_instance_info()->get_num_objects();
-        for (int i = 0; i < num_objects; ++i) {
-            for (int j = 0; j < num_objects; ++j) {
-                if (!c_data.test(j)) {
-                    if (r_data.test(i * num_objects + j)) {
-                        result_data.reset(i);
-                        break;
-                    }
-                }
+        const RoleDenotation r = m_role->evaluate(state);
+        const ConceptDenotation c = m_concept->evaluate(state);
+        ConceptDenotation result = state.get_instance_info()->get_top_concept_vec();
+        // Find counterexamples: (a,b) in R and b notin C => remove a
+        for (const auto& x : r) {
+            if (c.find(x.second) == c.end()) {
+                result.erase(x.first);
             }
         }
         return result;
