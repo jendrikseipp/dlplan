@@ -21,17 +21,16 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        RoleDenotation r_vec = m_role->evaluate(state);
-        const ConceptDenotation c_vec = m_concept->evaluate(state);
-        const ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
-        // 1. perform existential abstraction to find elements for which some relation to b exists.
-        ConceptDenotation_Set result_set;
-        for (const auto& r : r_vec) {
-            if (c_set.find(r.second) != c_set.end()) {
-                result_set.insert(r.first);
+        const RoleDenotation r = m_role->evaluate(state);
+        const ConceptDenotation c = m_concept->evaluate(state);
+        // Find examples: (a,b) in R and b in C => add a
+        ConceptDenotation result;
+        for (const auto& x : r) {  // (a,b) in R
+            if (c.find(x.second) != c.end()) {  // b in C
+                result.insert(x.first);  // add a
             }
         }
-        return ConceptDenotation(result_set.begin(), result_set.end());
+        return result;
     }
 
     int compute_complexity() const override {

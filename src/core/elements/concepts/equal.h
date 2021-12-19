@@ -21,28 +21,21 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const RoleDenotation left_vec = m_role_left->evaluate(state);
-        const RoleDenotation right_vec = m_role_right->evaluate(state);
-        const RoleDenotation_Set left_set(left_vec.begin(), left_vec.end());
-        const RoleDenotation_Set right_set(right_vec.begin(), right_vec.end());
-
-        int num_objects = state.get_instance_info()->get_num_objects();
-        ConceptDenotation result;
-        result.reserve(num_objects);
-        for (int i = 0; i < num_objects; ++i) {
-            // If the set of y such that (x, y) in sd1 is equal to the set of z such that (x, z) in sd2,
-            // then x makes it into the denotation of this concept
-            bool in_denotation = true;
-            for (int j = 0; j < num_objects; ++j) {
-                std::pair<int, int> r(i, j);
-                bool in_left = (left_set.find(r) != left_set.end());
-                bool in_right = (right_set.find(r) != right_set.end());
-                // std::cout << i << " " << j << " : " << in_left << " " << in_right << std::endl;
-                if (in_left != in_right) in_denotation = false;
+        const RoleDenotation l = m_role_left->evaluate(state);
+        const RoleDenotation r = m_role_right->evaluate(state);
+        ConceptDenotation result = state.get_instance_info()->get_top_concept_vec();
+        // Find counterexample: (a,b) in R and (a,b) not in S => remove a
+        for (const auto& x : l) {  // (a,b) in R
+            if (r.find(x) == r.end()) {  // (a,b) notin S
+                result.erase(x.first);
             }
-            if (in_denotation) result.push_back(i);
         }
-        result.shrink_to_fit();
+        // Find counterexample: (a,b) in S and (a,b) not in R => remove a
+        for (const auto& x : r) {  // (a,b) in S
+            if (l.find(x) == l.end()) {  // (a,b) notin R
+                result.erase(x.first);
+            }
+        }
         return result;
     }
 
