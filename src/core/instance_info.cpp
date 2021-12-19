@@ -146,50 +146,27 @@ const Index_Vec& InstanceInfoImpl::get_static_atom_idxs() const {
     return m_static_atom_idxs;
 }
 
-const ConceptDenotation_Set& InstanceInfoImpl::get_top_concept_set() const {
-    if (static_cast<int>(m_top_concept_set.size()) != get_num_objects()) {
-        m_top_concept_set.clear();
-        for (int i = 0; i < get_num_objects(); ++i) {
-            m_top_concept_set.insert(i);
-        }
-    }
-    return m_top_concept_set;
-}
-
 const ConceptDenotation& InstanceInfoImpl::get_top_concept_vec() const {
-    if (static_cast<int>(m_top_concept_vec.size()) != get_num_objects()) {
-        m_top_concept_vec.clear();
+    if (static_cast<int>(m_top_concept.size()) != get_num_objects()) {
+        m_top_concept.clear();
         for (int i = 0; i < get_num_objects(); ++i) {
-            m_top_concept_vec.push_back(i);
+            m_top_concept.insert(i);
         }
-        m_top_concept_vec.shrink_to_fit();
     }
-    return m_top_concept_vec;
+    return m_top_concept;
 }
 
-const RoleDenotation_Set& InstanceInfoImpl::get_top_role_set() const {
-    if (static_cast<int>(m_top_role_set.size()) != get_num_objects() * get_num_objects()) {
-        m_top_role_set.clear();
-        for (int i = 0; i < get_num_objects(); ++i) {
-            for (int j = 0; j < get_num_objects(); ++j) {
-                m_top_role_set.emplace(i, j);
-            }
-        }
-    }
-    return m_top_role_set;
-}
 
 const RoleDenotation& InstanceInfoImpl::get_top_role_vec() const {
-    if (static_cast<int>(m_top_role_vec.size()) != get_num_objects() * get_num_objects()) {
-        m_top_role_vec.clear();
+    if (static_cast<int>(m_top_role.size()) != get_num_objects() * get_num_objects()) {
+        m_top_role.clear();
         for (int i = 0; i < get_num_objects(); ++i) {
             for (int j = 0; j < get_num_objects(); ++j) {
-                m_top_role_vec.emplace_back(i, j);
+                m_top_role.emplace(i, j);
             }
         }
-        m_top_role_vec.shrink_to_fit();
     }
-    return m_top_role_vec;
+    return m_top_role;
 }
 
 }
