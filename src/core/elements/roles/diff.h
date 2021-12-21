@@ -20,13 +20,9 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const RoleDenotation l_vec = m_role_left->evaluate(state);
-        const RoleDenotation r_vec = m_role_right->evaluate(state);
-        RoleDenotation_Set r_set(l_vec.begin(), l_vec.end());
-        for (const auto& r : r_vec) {
-            r_set.erase(r);
-        }
-        return RoleDenotation(r_set.begin(), r_set.end());
+        const RoleDenotation l = m_role_left->evaluate(state);
+        const RoleDenotation r = m_role_right->evaluate(state);
+        return dlplan::utils::minus(l, r);
     }
 
     int compute_complexity() const override {

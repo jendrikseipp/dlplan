@@ -3,8 +3,6 @@
 #include <numeric>
 
 #include "../utils/logging.h"
-#include "hash_tables/hash_table_lossless.h"
-#include "hash_tables/hash_table_sha-256.h"
 #include "hash_tables/hash_table_murmur.h"
 
 

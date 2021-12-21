@@ -23,7 +23,7 @@ public:
         RoleDenotation result;
         result.reserve(r_vec.size());
         for (const auto& r : r_vec) {
-            result.emplace_back(r.second, r.first);
+            result.emplace(r.second, r.first);
         }
         return result;
     }

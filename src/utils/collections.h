@@ -24,6 +24,36 @@ bool is_subset(const std::unordered_set<T, H>& l, const std::unordered_set<T, H>
     return true;
 }
 
+template<class T, class H = std::hash<T>>
+std::unordered_set<T, H> intersect(const std::unordered_set<T, H>& l, const std::unordered_set<T, H>& r) {
+    std::unordered_set<T, H> result;
+    for (const auto& x : l) {
+        if (r.find(x) != r.end()) {
+            result.insert(x);
+        }
+    }
+    return result;
+}
+
+template<class T, class H = std::hash<T>>
+std::unordered_set<T, H> merge(const std::unordered_set<T, H>& l, const std::unordered_set<T, H>& r) {
+    std::unordered_set<T, H> result;
+    for (const auto& x : l) result.insert(x);
+    for (const auto& x : r) result.insert(x);
+    return result;
+}
+
+template<class T, class H = std::hash<T>>
+std::unordered_set<T, H> minus(const std::unordered_set<T, H>& l, const std::unordered_set<T, H>& r) {
+    std::unordered_set<T, H> result = l;
+    for (const auto& x : l) {
+        if (r.find(x) != r.end()) {
+            result.erase(x);
+        }
+    }
+    return result;
+}
+
 template<class T>
 bool in_bounds(int index, const T &container) {
     return index >= 0 && static_cast<size_t>(index) < container.size();

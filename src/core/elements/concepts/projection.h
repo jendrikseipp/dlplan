@@ -27,15 +27,15 @@ public:
 
     ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation role_result = m_role->evaluate(state);
-        ConceptDenotation_Set result_set;
+        ConceptDenotation result;
         for (const auto& r : role_result) {
             if (m_pos == 0) {
-                result_set.insert(r.first);
+                result.insert(r.first);
             } else if (m_pos == 1) {
-                result_set.insert(r.second);
+                result.insert(r.second);
             }
         }
-        return ConceptDenotation(result_set.begin(), result_set.end());
+        return result;
     }
 
     int compute_complexity() const override {

@@ -21,17 +21,14 @@ public:
     }
 
     RoleDenotation evaluate(const State& state) const override {
-        const RoleDenotation r_vec = m_role->evaluate(state);
-        const ConceptDenotation c_vec = m_concept->evaluate(state);
-        ConceptDenotation_Set c_set(c_vec.begin(), c_vec.end());
+        const RoleDenotation r = m_role->evaluate(state);
+        const ConceptDenotation c = m_concept->evaluate(state);
         RoleDenotation result;
-        result.reserve(r_vec.size());
-        for (const auto& r : r_vec) {
-            if (c_set.find(r.second) != c_set.end()) {
-                result.push_back(r);
+        for (const auto& x : r) {
+            if (c.find(x.second) != c.end()) {
+                result.insert(x);
             }
         }
-        result.shrink_to_fit();
         return result;
     }
 

@@ -87,11 +87,10 @@ RoleDenotation compute_transitive_closure(const PairwiseDistances& distances) {
     for (int source = 0; source < num_objects; ++source) {
         for (int target = 0; target < num_objects; ++target) {
             if (distances[source][target] < INF) {
-                result.emplace_back(source, target);
+                result.emplace(source, target);
             }
         }
     }
-    result.shrink_to_fit();
     return result;
 }
 
