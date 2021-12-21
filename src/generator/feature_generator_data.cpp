@@ -1,5 +1,6 @@
 #include "feature_generator_data.h"
 
+#include <algorithm>
 #include <numeric>
 
 #include "../utils/logging.h"
@@ -35,8 +36,14 @@ std::vector<D> evaluate(core::Element<D>& element, const States& states) {
 /**
  * Flattens a vector of concept denotations
  */
-static std::vector<int> flatten_concept_denotation(const std::vector<std::vector<int>>& denotations) {
+static std::vector<int> flatten_concept_denotation(const std::vector<core::ConceptDenotation>& denotations) {
+    // determine required memory;
+    size_t size = 0;
+    for (const auto& denot : denotations) {
+        size += denot.size();
+    }
     std::vector<int> result;
+    result.reserve(1 + denotations.size() + size);
     // the layout
     result.push_back(denotations.size());
     for (const auto& denot : denotations) {
@@ -44,9 +51,11 @@ static std::vector<int> flatten_concept_denotation(const std::vector<std::vector
     }
     // the data
     for (const auto& denot : denotations) {
+        // we sort the set result of the set after adding it to the vector to obtain canonical representation.
+        const auto& start = result.end();
         result.insert(result.end(), denot.begin(), denot.end());
+        std::sort(start, result.end());
     }
-    result.shrink_to_fit();
     return result;
 }
 
@@ -54,8 +63,14 @@ static std::vector<int> flatten_concept_denotation(const std::vector<std::vector
 /**
  * Flattens a vector of role denotations
  */
-static std::vector<int> flatten_role_denotation(const std::vector<std::vector<std::pair<int, int>>>& denotations) {
+static std::vector<int> flatten_role_denotation(const std::vector<core::RoleDenotation>& denotations) {
+    // determine required memory;
+    size_t size = 0;
+    for (const auto& denot : denotations) {
+        size += denot.size();
+    }
     std::vector<int> result;
+    result.reserve(1 + denotations.size() + size * 2);
     // the layout
     result.push_back(denotations.size());
     for (const auto& denot : denotations) {
@@ -63,7 +78,9 @@ static std::vector<int> flatten_role_denotation(const std::vector<std::vector<st
     }
     // the data
     for (const auto& denot : denotations) {
-        for (const auto& p : denot) {
+        std::vector<std::pair<int, int>> denot_vec(denot.begin(), denot.end());
+        std::sort(denot_vec.begin(), denot_vec.end());
+        for (const auto& p : denot_vec) {
             result.push_back(p.first);
             result.push_back(p.second);
         }
