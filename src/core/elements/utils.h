@@ -2,11 +2,10 @@
 #define DLPLAN_SRC_CORE_ELEMENTS_UTILS_H_
 
 #include "types.h"
+#include "../../../include/dlplan/types.h"
 
 
-namespace dlplan::core {
-class RoleDenotation;
-namespace element::utils {
+namespace dlplan::core::element::utils {
 
 using AdjList = std::vector<std::vector<int>>;
 using Distances = std::vector<int>;
@@ -20,7 +19,7 @@ extern int path_addition(int a, int b);
 /**
  * Computes an adjacency list from a given role.
  */
-extern AdjList compute_adjacency_list(const RoleDenotation& r);
+extern AdjList compute_adjacency_list(const RoleDenotation& r_vec, int num_objects);
 
 /**
  * Compute distances from a given state in a graph defined by an adjacency list.
@@ -35,9 +34,8 @@ extern PairwiseDistances compute_floyd_warshall(const AdjList& adj_list, bool re
 /**
  * Compute the transitive (reflexive) closure over the role denotation
  */
-extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances, int num_objects);
+extern RoleDenotation compute_transitive_closure(const PairwiseDistances& distances);
 
-}
 }
 
 #endif

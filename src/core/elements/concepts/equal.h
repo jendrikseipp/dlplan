@@ -21,21 +21,19 @@ public:
     }
 
     ConceptDenotation evaluate(const State& state) const override {
-        const auto r = m_role_left->evaluate(state);
-        const auto& r_data = r.get_const_data();
-        const auto s = m_role_right->evaluate(state);
-        const auto& s_data = s.get_const_data();
-        int num_objects = state.get_instance_info()->get_num_objects();
+        const RoleDenotation l = m_role_left->evaluate(state);
+        const RoleDenotation r = m_role_right->evaluate(state);
         ConceptDenotation result = state.get_instance_info()->get_top_concept();
-        auto& result_data = result.get_data();
-        // find counterexample [(a,b) in R and (a,b) not in S] or [(a,b) not in R and (a,b) in S]
-        for (int i = 0; i < num_objects; ++i) {
-            for (int j = 0; j < num_objects; ++j) {
-                int index = i * num_objects + j;
-                if (r_data.test(index) != s_data.test(index)) {
-                    result_data.reset(i);
-                    break;
-                }
+        // Find counterexample: (a,b) in R and (a,b) not in S => remove a
+        for (const auto& x : l) {  // (a,b) in R
+            if (r.find(x) == r.end()) {  // (a,b) notin S
+                result.erase(x.first);
+            }
+        }
+        // Find counterexample: (a,b) in S and (a,b) not in R => remove a
+        for (const auto& x : r) {  // (a,b) in S
+            if (l.find(x) == l.end()) {  // (a,b) notin R
+                result.erase(x.first);
             }
         }
         return result;

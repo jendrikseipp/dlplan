@@ -23,7 +23,7 @@ public:
     ConceptDenotation evaluate(const State& state) const override {
         const RoleDenotation r = m_role->evaluate(state);
         const ConceptDenotation c = m_concept->evaluate(state);
-        ConceptDenotation result = state.get_instance_info()->get_top_concept_vec();
+        ConceptDenotation result = state.get_instance_info()->get_top_concept();
         // Find counterexamples: (a,b) in R and b notin C => remove a
         for (const auto& x : r) {
             if (c.find(x.second) == c.end()) {
